@@ -1,14 +1,13 @@
 import * as React from 'react'
 
 export interface BoxProps {
-    className?: string, title?: string, children?: any
+    className?: string, children?: any
 }
 
 const flex_box_generator = (default_class_name: string): React.StatelessComponent<BoxProps> => {
     return (props: BoxProps): JSX.Element => {
         return (
             <div className={default_class_name + ' ' + (props.className || '')}>
-                <h2 className='dxb dxb-box-title'>{props.title}</h2>    
                 <div className='dxb dxb-box-content'>
                     {props.children}    
                 </div>
@@ -19,6 +18,19 @@ const flex_box_generator = (default_class_name: string): React.StatelessComponen
 
 export const HBox = flex_box_generator('dxb dxb-box dxb-hbox')
 export const VBox = flex_box_generator('dxb dxb-box dxb-vbox')
+
+export function SectionBox(props: { className?: string, title?: string, children?: any }): JSX.Element {
+    return (
+        <div className={'dxb dxb-section ' + (props.className || '')}>
+            {
+                props.title ? <h2 className='dxb dxb-section-title'>{props.title}</h2> : ''
+            }    
+            <div className='dxb dxb-section-content'>
+                {props.children}    
+            </div>
+        </div>
+    )
+}
 
 export interface SplitTable {
     headers: string[],
