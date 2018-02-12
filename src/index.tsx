@@ -69,7 +69,7 @@ export function RowTable<T>(props: TableProps<T>): JSX.Element {
 
 export function ColTable<T>(props: TableProps<T>): JSX.Element {
     const records = props.records
-    const headers = props.headers ? props.headers : Object.keys(records)
+    const headers = props.headers ? props.headers : Object.keys(records[0])
     const rows = []
     for (let i = 0; i < headers.length; i += 1) {
         rows.push([])
