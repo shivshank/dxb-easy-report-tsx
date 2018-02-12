@@ -4,20 +4,31 @@ export interface BoxProps {
     className?: string, children?: any
 }
 
-const flex_box_generator = (default_class_name: string): React.StatelessComponent<BoxProps> => {
+const flex_box_generator = (default_class_name: string, style: object): React.StatelessComponent<BoxProps> => {
     return (props: BoxProps): JSX.Element => {
         return (
-            <div className={default_class_name + ' ' + (props.className || '')}>
-                <div className='dxb dxb-box-content'>
-                    {props.children}    
-                </div>
+            <div style={style} className={default_class_name + ' ' + (props.className || '')}>
+                {props.children}
             </div>    
         )
     }
 }
 
-export const HBox = flex_box_generator('dxb dxb-box dxb-hbox')
-export const VBox = flex_box_generator('dxb dxb-box dxb-vbox')
+export const HBox = flex_box_generator('dxb dxb-box dxb-hbox', {
+    display: 'inline-flex',
+    flexFlow: 'row wrap',
+    justifyContent: 'flex-start',
+    alignContent: 'flex-start',
+    alignItems: 'flex-start',
+})
+
+export const VBox = flex_box_generator('dxb dxb-box dxb-vbox', {
+    display: 'inline-flex',
+    flexFlow: 'column wrap',
+    justifyContent: 'flex-start',
+    alignContent: 'flex-start',
+    alignItems: 'flex-start',
+})
 
 export function SectionBox(props: { className?: string, title?: string, children?: any }): JSX.Element {
     return (
