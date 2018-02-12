@@ -39,7 +39,7 @@ export function SectionBox(props: { className?: string, title?: string, children
                 props.title ? <h2 className='dxb dxb-section-title'>{props.title}</h2> : ''
             }    
             <div className='dxb dxb-section-content'>
-                {props.children}    
+                {props.children}
             </div>
         </div>
     )
@@ -54,12 +54,12 @@ export interface TableProps<T> {
 export function RowTable<T>(props: TableProps<T>): JSX.Element {
     const records = props.records
     const headers = props.headers ? props.headers : Object.keys(records)
-    const rows = records.map(r => <tr>{headers.map(h => <td>{(r as any)[h]}</td>)}</tr>)
+    const rows = records.map((r, i) => <tr key={i}>{headers.map(h => <td key={h}>{(r as any)[h]}</td>)}</tr>)
     return (
         <table className={'dxb dxb-table dxb-row-table ' + (props.className || '')}>
             <thead>
                 <tr>
-                    {headers.map(h => <th>{h}</th>)}
+                    {headers.map(h => <th key={h}>{h}</th>)}
                 </tr>
             </thead>
             <tbody>
@@ -83,7 +83,11 @@ export function ColTable<T>(props: TableProps<T>): JSX.Element {
         <table className={'dxb dxb-table dxb-col-table ' + (props.className || '')}>
             <tbody>
                 {
-                    rows.map((row, i) => <tr><th>{headers[i]}</th>{row.map(cell => <td>{cell}</td>)}</tr>)
+                    rows.map((row, header_i) => (
+                        <tr key={headers[header_i]}>
+                            <th>{headers[header_i]}</th>{row.map((cell, i) => <td key={i}>{cell}</td>)}
+                        </tr>
+                    ))
                 }
             </tbody>
         </table>
