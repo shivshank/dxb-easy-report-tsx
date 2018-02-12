@@ -1,13 +1,15 @@
 import * as React from 'react'
 
 export interface BoxProps {
-    className?: string, children?: any
+    className?: string, children?: any,
+    style?: any,
 }
 
 const flex_box_generator = (default_class_name: string, style: object): React.StatelessComponent<BoxProps> => {
     return (props: BoxProps): JSX.Element => {
+        const merged_style = props.style ? {...style, ...props.style} : style
         return (
-            <div style={style} className={default_class_name + ' ' + (props.className || '')}>
+            <div style={merged_style} className={default_class_name + ' ' + (props.className || '')}>
                 {props.children}
             </div>    
         )
