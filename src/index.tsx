@@ -43,39 +43,18 @@ export function SectionBox(props: { className?: string, title?: string, children
     )
 }
 
-export interface SplitTable {
-    headers: string[],
-    cross_headers?: string[],
-    values: string[][],
-}
-
-export type TableProps<T> = (SplitTable | {records: T[]}) & { className?: string }
-
-function isSplitTable<T>(props: TableProps<T>): props is SplitTable {
-    return (props as SplitTable).headers !== undefined && (props as SplitTable).values !== undefined
-}
-
-function split_table<T>(props: TableProps<T>): SplitTable {
-    if (!isSplitTable(props)) {
-        // TODO: Options for alphabetizing or sorting records? Maybe an ordered keys field...
-        const headers = Object.keys(props.records[0])
-        const values = props.records.map(r => headers.map(h => (r as any)[h]))
-        return {
-            headers,
-            values,
-        }
-    } else {
-        return props
-    }
+export interface TableProps<T> {
+    records: T[],
+    headers?: string[],
+    className?: string,
 }
 
 export function RowTable<T>(props: TableProps<T>): JSX.Element {
-    const { headers, values, cross_headers } = split_table(props)
-    const rows = cross_headers ? values.map((r, i) =>
-            <tr><th>{cross_headers[i]}</th> {r.map(cell => <td>{cell}</td>)}</tr>)
-        : values.map(r => <tr>{r.map(cell => <td>{cell}</td>)}</tr>)
+    const records = props.records
+    const headers = props.headers ? props.headers : Object.keys(records)
+    const rows = records.map(r => <tr>{headers.map(h => <td>{(r as any)[h]}</td>)}</tr>)
     return (
-        <table className={'dxb dxb-row-table ' + (props.className || '')}>
+        <table className={'dxb dxb-table dxb-row-table ' + (props.className || '')}>
             <thead>
                 <tr>
                     {headers.map(h => <th>{h}</th>)}
@@ -83,6 +62,27 @@ export function RowTable<T>(props: TableProps<T>): JSX.Element {
             </thead>
             <tbody>
                 {rows}
+            </tbody>
+        </table>
+    )
+}
+
+export function ColTable<T>(props: TableProps<T>): JSX.Element {
+    const records = props.records
+    const headers = props.headers ? props.headers : Object.keys(records)
+    const rows = []
+    for (let i = 0; i < headers.length; i += 1) {
+        rows.push([])
+        const header = headers[i]
+        Array.prototype.push
+            .apply(rows[i], records.map(r => (r as any)[header]))
+    }
+    return (
+        <table className={'dxb dxb-table dxb-col-table ' + (props.className || '')}>
+            <tbody>
+                {
+                    rows.map((row, i) => <tr><th>{headers[i]}</th>{row.map(cell => <td>{cell}</td>)}</tr>)
+                }
             </tbody>
         </table>
     )
